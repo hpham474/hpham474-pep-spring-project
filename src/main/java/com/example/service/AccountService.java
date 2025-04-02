@@ -3,6 +3,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.entity.Account;
+import com.example.exception.AuthenticationFailedException;
 import com.example.exception.UserAlreadyExistsException;
 import com.example.exception.UserRegistrationException;
 import com.example.repository.AccountRepository;
@@ -33,5 +34,11 @@ public class AccountService {
         }
     }
 
-
+    public Account loginAccount(Account account) throws AuthenticationFailedException {
+        Account attemptedLogin = accountRepository.findByUsername(account.getUsername());
+        if (attemptedLogin == null || !attemptedLogin.getPassword().equals(account.getPassword())) {
+            throw new AuthenticationFailedException("The username or password you entered is incorrect");
+        }
+        return attemptedLogin;
+    }
 }

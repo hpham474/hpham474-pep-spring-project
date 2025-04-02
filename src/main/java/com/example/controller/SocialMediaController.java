@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.entity.Account;
 import com.example.entity.Message;
+import com.example.exception.AuthenticationFailedException;
 import com.example.exception.UserAlreadyExistsException;
 import com.example.exception.UserRegistrationException;
 import com.example.service.AccountService;
@@ -43,6 +44,15 @@ public class SocialMediaController {
             return new ResponseEntity<>(account, HttpStatus.CONFLICT);
         } catch (UserRegistrationException e) {
             return new ResponseEntity<>(account, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("login")
+    public ResponseEntity<Account> login(@RequestBody Account account) {
+        try {
+            return new ResponseEntity<>(accountService.loginAccount(account), HttpStatus.OK);
+        } catch (AuthenticationFailedException e) {
+            return new ResponseEntity<>(account, HttpStatus.UNAUTHORIZED);
         }
     }
 
