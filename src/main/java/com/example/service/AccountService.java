@@ -1,20 +1,27 @@
 package com.example.service;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.entity.Account;
+import com.example.entity.Message;
 import com.example.exception.AuthenticationFailedException;
 import com.example.exception.UserAlreadyExistsException;
 import com.example.exception.UserRegistrationException;
 import com.example.repository.AccountRepository;
+import com.example.repository.MessageRepository;
 
 @Service
 public class AccountService {
     private AccountRepository accountRepository;
+    private MessageRepository messageRepository;
 
     @Autowired
-    public AccountService(AccountRepository accountRepository) {
+    public AccountService(AccountRepository accountRepository, MessageRepository messageRepository) {
         this.accountRepository = accountRepository;
+        this.messageRepository = messageRepository;
     }
 
     public void registerAccount(Account account) throws UserAlreadyExistsException, UserRegistrationException {
@@ -40,5 +47,13 @@ public class AccountService {
             throw new AuthenticationFailedException("The username or password you entered is incorrect");
         }
         return attemptedLogin;
+    }
+
+    public List<Message> getUserMessages(int accountId) {
+        Optional<Account> optionalAccount = accountRepository.findById(accountId);
+        if (optionalAccount.isPresent()) {
+            return messageRepository.findAllByPostedBy(accountId);
+        }
+        return null;
     }
 }
