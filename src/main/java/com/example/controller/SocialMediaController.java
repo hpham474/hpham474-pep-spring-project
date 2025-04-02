@@ -2,10 +2,18 @@ package com.example.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.entity.Account;
 import com.example.entity.Message;
+import com.example.exception.UserAlreadyExistsException;
+import com.example.exception.UserRegistrationException;
 import com.example.service.AccountService;
 import com.example.service.MessageService;
 
@@ -26,6 +34,17 @@ public class SocialMediaController {
         this.accountService = accountService;
     }
 
+    @PostMapping("register")
+    public ResponseEntity<Account> register(@RequestBody Account account) {
+        try {
+            accountService.registerAccount(account);
+            return new ResponseEntity<>(account, HttpStatus.OK);
+        } catch (UserAlreadyExistsException e) {
+            return new ResponseEntity<>(account, HttpStatus.CONFLICT);
+        } catch (UserRegistrationException e) {
+            return new ResponseEntity<>(account, HttpStatus.BAD_REQUEST);
+        }
+    }
 
     @GetMapping("messages")
     public List<Message> getMessageList() {
