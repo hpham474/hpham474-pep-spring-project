@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.entity.Message;
+import com.example.exception.MessageNotFoundException;
 import com.example.repository.MessageRepository;
 
 @Service
@@ -36,5 +37,21 @@ public class MessageService {
             return "1";
         }
         return null;
+    }
+
+    // TODO: Fix bug - MessageNotFoundException not being thrown on empty messages
+    public String updateMessage(int messageId, String messageText) throws MessageNotFoundException {
+        Optional<Message> optionalMessage = messageRepository.findById(messageId);
+        if (
+            !optionalMessage.isPresent() ||
+            messageText.length() > 255 ||
+            messageText.isEmpty()
+        ) {
+            throw new MessageNotFoundException("Error updating message");
+        }
+        Message message = optionalMessage.get();
+        message.setMessageText(messageText);
+        messageRepository.save(message);
+        return "1";
     }
 }
