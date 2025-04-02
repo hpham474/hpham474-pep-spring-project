@@ -24,7 +24,7 @@ public class MessageService {
 
     public Message createMessage(Message message) throws MessageCreationFailedException {
         if (
-            message.getMessageText().isEmpty() ||
+            message.getMessageText().isBlank() ||
             message.getMessageText().length() > 255 ||
             !accountRepository.findById(message.getPostedBy()).isPresent()
         ) {
@@ -54,18 +54,17 @@ public class MessageService {
         return null;
     }
 
-    // TODO: Fix bug - MessageNotFoundException not being thrown on empty messages
-    public String updateMessage(int messageId, String messageText) throws MessageNotFoundException {
+    public String updateMessage(int messageId, Message updatedMessage) throws MessageNotFoundException {
         Optional<Message> optionalMessage = messageRepository.findById(messageId);
         if (
             !optionalMessage.isPresent() ||
-            messageText.length() > 255 ||
-            messageText.isEmpty()
+            updatedMessage.getMessageText().length() > 255 ||
+            updatedMessage.getMessageText().isBlank()
         ) {
             throw new MessageNotFoundException("Error updating message");
         }
         Message message = optionalMessage.get();
-        message.setMessageText(messageText);
+        message.setMessageText(updatedMessage.getMessageText());
         messageRepository.save(message);
         return "1";
     }

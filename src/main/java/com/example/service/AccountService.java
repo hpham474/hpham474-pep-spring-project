@@ -26,13 +26,13 @@ public class AccountService {
 
     public void registerAccount(Account account) throws UserAlreadyExistsException, UserRegistrationException {
         if (
-            !account.getUsername().isEmpty()&& 
+            !account.getUsername().isBlank()&& 
             account.getPassword().length() >= 4 && 
             accountRepository.findByUsername(account.getUsername()) == null
         ) {
             accountRepository.save(account);
         } else if (
-            !account.getUsername().isEmpty() &&
+            !account.getUsername().isBlank() &&
             account.getPassword().length() >= 4
         ) {
             throw new UserAlreadyExistsException("User already exists");

@@ -85,13 +85,22 @@ public class SocialMediaController {
     }
 
     @PatchMapping("messages/{messageId}")
-    public ResponseEntity<String> updateMessage(@PathVariable int messageId, @RequestBody String messageText) {
+    public ResponseEntity<String> updateMessage(@PathVariable int messageId, @RequestBody Message updatedMessage) {
         try {
-            return new ResponseEntity<>(messageService.updateMessage(messageId, messageText), HttpStatus.OK);
+            return new ResponseEntity<>(messageService.updateMessage(messageId, updatedMessage), HttpStatus.OK);
         } catch (MessageNotFoundException e) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
+
+    // @PatchMapping("messages/{messageId}")
+    // public ResponseEntity<String> updateMessage(@PathVariable int messageId, @RequestBody String messageText) {
+    //     try {
+    //         return new ResponseEntity<>(messageService.updateMessage(messageId, messageText), HttpStatus.OK);
+    //     } catch (MessageNotFoundException e) {
+    //         return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+    //     }
+    // }
 
     @GetMapping("accounts/{accountId}/messages")
     public List<Message> getUserMessages(@PathVariable int accountId) {
