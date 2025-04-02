@@ -22,12 +22,6 @@ import com.example.exception.UserRegistrationException;
 import com.example.service.AccountService;
 import com.example.service.MessageService;
 
-/**
- * TODO: You will need to write your own endpoints and handlers for your controller using Spring. The endpoints you will need can be
- * found in readme.md as well as the test cases. You be required to use the @GET/POST/PUT/DELETE/etc Mapping annotations
- * where applicable as well as the @ResponseBody and @PathVariable annotations. You should
- * refer to prior mini-project labs and lecture materials for guidance on how a controller may be built.
- */
 @RestController
 public class SocialMediaController {
     private MessageService messageService;
@@ -92,15 +86,6 @@ public class SocialMediaController {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
-
-    // @PatchMapping("messages/{messageId}")
-    // public ResponseEntity<String> updateMessage(@PathVariable int messageId, @RequestBody String messageText) {
-    //     try {
-    //         return new ResponseEntity<>(messageService.updateMessage(messageId, messageText), HttpStatus.OK);
-    //     } catch (MessageNotFoundException e) {
-    //         return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-    //     }
-    // }
 
     @GetMapping("accounts/{accountId}/messages")
     public List<Message> getUserMessages(@PathVariable int accountId) {
