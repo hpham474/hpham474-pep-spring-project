@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.entity.Account;
 import com.example.entity.Message;
 import com.example.exception.AuthenticationFailedException;
+import com.example.exception.MessageCreationFailedException;
 import com.example.exception.MessageNotFoundException;
 import com.example.exception.UserAlreadyExistsException;
 import com.example.exception.UserRegistrationException;
@@ -56,6 +57,15 @@ public class SocialMediaController {
             return new ResponseEntity<>(accountService.loginAccount(account), HttpStatus.OK);
         } catch (AuthenticationFailedException e) {
             return new ResponseEntity<>(account, HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    @PostMapping("messages")
+    public ResponseEntity<Message> createMessage(@RequestBody Message message) {
+        try {
+            return new ResponseEntity<>(messageService.createMessage(message), HttpStatus.OK);
+        } catch (MessageCreationFailedException e) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 

@@ -6,16 +6,31 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.entity.Message;
+import com.example.exception.MessageCreationFailedException;
 import com.example.exception.MessageNotFoundException;
+import com.example.repository.AccountRepository;
 import com.example.repository.MessageRepository;
 
 @Service
 public class MessageService {
     private MessageRepository messageRepository;
+    private AccountRepository accountRepository;
 
     @Autowired
-    public MessageService(MessageRepository messageRepository) {
+    public MessageService(MessageRepository messageRepository, AccountRepository accountRepository) {
         this.messageRepository = messageRepository;
+        this.accountRepository = accountRepository;
+    }
+
+    public Message createMessage(Message message) throws MessageCreationFailedException {
+        if (
+            message.getMessageText().isEmpty() ||
+            message.getMessageText().length() > 255 ||
+            !accountRepository.findById(message.getPostedBy()).isPresent()
+        ) {
+            throw new MessageCreationFailedException("Message failed to be created");
+        }
+        return messageRepository.save(message);
     }
 
     public List<Message> getMessageList() {
