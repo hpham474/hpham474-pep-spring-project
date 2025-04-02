@@ -28,4 +28,13 @@ public class MessageService {
         }
         return null;
     }
+
+    public String deleteMessage(int messageId) {
+        Optional<Message> optionalMessage = messageRepository.findById(messageId);
+        if (optionalMessage.isPresent()) {
+            messageRepository.deleteById(messageId);
+            return "1";
+        }
+        return null;
+    }
 }
